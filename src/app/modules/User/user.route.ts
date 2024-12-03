@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.get("/", auth(UserRole.ADMIN), userControllers.getAllUsers);
 
+router.get("/email", auth(UserRole.ADMIN), userControllers.getUserByEmail);
+
 router.post(
   "/",
   validateRequest(userValidations.createUserSchema),
