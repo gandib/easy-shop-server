@@ -17,4 +17,18 @@ router.post(
   userControllers.createUser
 );
 
+router.patch(
+  "/email",
+  auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
+  validateRequest(userValidations.updateUserSchema),
+  userControllers.updateUser
+);
+
+router.patch(
+  "/status-change",
+  auth(UserRole.ADMIN),
+  validateRequest(userValidations.statusChangeSchema),
+  userControllers.statusChange
+);
+
 export const userRoutes = router;

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, UserStatus } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import bcrypt from "bcrypt";
 import AppError from "../../errors/AppError";
@@ -66,8 +66,73 @@ const getUserByEmail = async (email: string) => {
   return result;
 };
 
+const updateUser = async (email: string, payload: Partial<User>) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+      status: "ACTIVE",
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
+const statusChange = async (payload: { id: string; status: UserStatus }) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: payload.id,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id: payload.id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    data: {
+      status: payload.status,
+    },
+  });
+
+  return result;
+};
+
 export const userServices = {
   createUser,
   getAllUsers,
   getUserByEmail,
+  updateUser,
+  statusChange,
 };

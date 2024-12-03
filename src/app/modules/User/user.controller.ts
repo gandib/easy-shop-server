@@ -36,8 +36,32 @@ const getUserByEmail = catchAsync(async (req, res) => {
   });
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const result = await userServices.updateUser(req.user.email, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User updated successfully!",
+    data: result,
+  });
+});
+
+const statusChange = catchAsync(async (req, res) => {
+  const result = await userServices.statusChange(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User status changed successfully!",
+    data: result,
+  });
+});
+
 export const userControllers = {
   createUser,
   getAllUsers,
   getUserByEmail,
+  updateUser,
+  statusChange,
 };
