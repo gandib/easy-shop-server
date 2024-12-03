@@ -17,7 +17,7 @@ model User {
 id String @id @default(uuid())
 name String
 email String
-role UserRole @default(CUSTOMER)
+role UserRole @default(USER)
 password String
 status UserStatus @default(ACTIVE)
 shop Shop?
@@ -119,8 +119,8 @@ updatedAt     DateTime @updatedAt
 
 model Rating {
 id String @id @default(uuid())
-customerId String
-customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+userId String
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 rating Int
@@ -136,8 +136,8 @@ id String @id @default(uuid())
 comment String
 productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-customerId String
-customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+userId String
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 shopResponse ShopResponse?
 
 createdAt     DateTime @default(now())
@@ -200,19 +200,19 @@ updatedAt     DateTime @updatedAt
 }
 
 model Follow {
-customerId String
-customer User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+userId String
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 shopId String 
 shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
-@@id([customerId, shopId])
+@@id([userId, shopId])
 @@map("follows")
 }
 
 enum UserRole {
-  Admin
-  Vendor
-  CUSTOMER
+  ADMIN
+  VENDOR
+  USER
 }
 enum UserStatus {
   ACTIVE
