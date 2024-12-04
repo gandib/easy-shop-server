@@ -137,7 +137,7 @@ id String @id @default(uuid())
 comment String
 productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-userId String
+userId String @unique
 user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 shopResponse ShopResponse?
 
