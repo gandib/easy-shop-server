@@ -86,8 +86,6 @@ updatedAt     DateTime @updatedAt
 @@map("products")
 }
 
-
-
 model Order {
 id String @id @default(uuid())
 userId String
@@ -120,7 +118,7 @@ updatedAt     DateTime @updatedAt
 
 model Rating {
 id String @id @default(uuid())
-userId String
+userId String @unique
 user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
