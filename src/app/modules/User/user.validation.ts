@@ -10,14 +10,14 @@ const createUserSchema = z.object({
   }),
 });
 
-const updateUserSchema = z
-  .object({
-    body: z.object({
+const updateUserSchema = z.object({
+  body: z
+    .object({
       name: z.string().optional(),
       password: z.string().optional(),
-    }),
-  })
-  .strict();
+    })
+    .strict(),
+});
 
 const statusChangeSchema = z.object({
   body: z.object({
