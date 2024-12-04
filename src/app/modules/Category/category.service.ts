@@ -14,6 +14,9 @@ const getAllCategories = async () => {
     where: {
       isDeleted: false,
     },
+    include: {
+      product: true,
+    },
   });
   return result;
 };
@@ -23,6 +26,9 @@ const getCategoryById = async (id: string) => {
     where: {
       id,
       isDeleted: false,
+    },
+    include: {
+      product: true,
     },
   });
   return result;

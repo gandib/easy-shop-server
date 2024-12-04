@@ -1,8 +1,6 @@
 import { Shop, UserRole } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import { sendImageToCloudinary } from "../../../utils/sendImageToCloudinary";
-import AppError from "../../errors/AppError";
-import httpStatus from "http-status";
 
 const createShop = async (file: any, payload: Shop) => {
   if (file) {
@@ -28,6 +26,14 @@ const getAllShops = async () => {
     where: {
       isBlackListed: false,
     },
+    include: {
+      vendor: true,
+      product: true,
+      shopResponse: true,
+      follow: true,
+      coupon: true,
+      flashSale: true,
+    },
   });
   return result;
 };
@@ -37,6 +43,14 @@ const getShopById = async (id: string) => {
     where: {
       id,
       isBlackListed: false,
+    },
+    include: {
+      vendor: true,
+      product: true,
+      shopResponse: true,
+      follow: true,
+      coupon: true,
+      flashSale: true,
     },
   });
   return result;

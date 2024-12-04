@@ -3,6 +3,7 @@ import { userRoutes } from "../modules/User/user.route";
 import { authRoutes } from "../modules/Auth/auth.route";
 import { categoryRoutes } from "../modules/Category/category.route";
 import { shopRoutes } from "../modules/Shop/shop.route";
+import { productRoutes } from "../modules/Product/product.route";
 
 const router = express.Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: "/shop",
     route: shopRoutes,
+  },
+  {
+    path: "/product",
+    route: productRoutes,
   },
 ];
 

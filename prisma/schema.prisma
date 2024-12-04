@@ -74,7 +74,7 @@ category Category @relation(fields: [categoryId], references: [id], onDelete: Ca
 description String
 img String
 quantity Int
-discount Float?
+discount Float? @default(0)
 isDeleted Boolean @default(false)
 orderItem OrderItem[]
 rating Rating[]
@@ -110,6 +110,7 @@ product Product @relation(fields: [productId], references: [id], onDelete: Casca
 orderId String
 order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 quantity Int
+paymentStatus PaymentStatus @default(UNPAID)
 
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt
@@ -229,5 +230,6 @@ enum OrderStatus {
 enum PaymentStatus {
   UNPAID
   PAID
+  CANCELLED
 }
 

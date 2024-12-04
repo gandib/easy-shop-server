@@ -37,6 +37,10 @@ const getAllUsers = async () => {
       status: true,
       createdAt: true,
       updatedAt: true,
+      shop: true,
+      follow: true,
+      review: true,
+      rating: true,
     },
   });
   return result;
@@ -56,6 +60,10 @@ const getUserByEmail = async (email: string) => {
       status: true,
       createdAt: true,
       updatedAt: true,
+      shop: true,
+      follow: true,
+      review: true,
+      rating: true,
     },
   });
 
@@ -90,6 +98,10 @@ const updateUser = async (email: string, payload: Partial<User>) => {
       status: true,
       createdAt: true,
       updatedAt: true,
+      shop: true,
+      follow: true,
+      review: true,
+      rating: true,
     },
     data: payload,
   });
@@ -120,6 +132,10 @@ const statusChange = async (payload: { id: string; status: UserStatus }) => {
       status: true,
       createdAt: true,
       updatedAt: true,
+      shop: true,
+      follow: true,
+      review: true,
+      rating: true,
     },
     data: {
       status: payload.status,
