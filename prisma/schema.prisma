@@ -42,7 +42,6 @@ isBlackListed Boolean @default(false)
 product Product[]
 shopResponse ShopResponse[]
 coupon Coupon[]
-flashSale FlashSale[]
 follow Follow[]
 
 createdAt     DateTime @default(now())
@@ -79,6 +78,7 @@ isDeleted Boolean @default(false)
 orderItem OrderItem[]
 rating Rating[]
 review Review[]
+flashSale FlashSale[]
 
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt
@@ -189,8 +189,10 @@ updatedAt     DateTime @updatedAt
 
 model FlashSale {
 id String @id @default(uuid())
-shopId String 
-shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+productId String 
+product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+percentage Float
+expiryDate DateTime
 
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt
