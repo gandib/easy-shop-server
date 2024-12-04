@@ -9,7 +9,7 @@ const createUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User created successfully!",
+    message: "User is created successfully!",
     data: result,
   });
 });
@@ -20,7 +20,7 @@ const getAllUsers = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Users retrieved successfully!",
+    message: "Users are retrieved successfully!",
     data: result,
   });
 });
@@ -31,7 +31,7 @@ const getUserByEmail = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User retrieved successfully!",
+    message: "User is retrieved successfully!",
     data: result,
   });
 });
@@ -42,7 +42,7 @@ const updateUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User updated successfully!",
+    message: "User is updated successfully!",
     data: result,
   });
 });
@@ -53,7 +53,7 @@ const statusChange = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User status changed successfully!",
+    message: "User status is changed successfully!",
     data: result,
   });
 });

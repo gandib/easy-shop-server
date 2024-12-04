@@ -17,6 +17,14 @@ const globalErrorHandler = (
       error,
     });
   }
+  if (error.code === "P2025") {
+    const target = error.meta.modelName;
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: `${target} is not found!`,
+      error,
+    });
+  }
   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
     success: false,
     message: error?.message || "Something went wrong!",

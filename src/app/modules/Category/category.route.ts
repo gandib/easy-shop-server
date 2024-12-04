@@ -29,11 +29,4 @@ router.patch(
   categoryControllers.updateCategoryById
 );
 
-// router.del(
-//   "/status-change",
-//   auth(UserRole.ADMIN),
-//   validateRequest(userValidations.statusChangeSchema),
-//   userControllers.statusChange
-// );
-
 export const categoryRoutes = router;
