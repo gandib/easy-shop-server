@@ -201,7 +201,7 @@ updatedAt     DateTime @updatedAt
 }
 
 model Follow {
-userId String
+userId String @unique
 user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 shopId String 
 shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
