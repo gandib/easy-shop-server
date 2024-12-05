@@ -20,7 +20,15 @@ const createRating = async (payload: Rating, user: TUser) => {
   const result = await prisma.rating.create({
     data: payload,
     include: {
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       product: true,
     },
   });
@@ -31,7 +39,15 @@ const createRating = async (payload: Rating, user: TUser) => {
 const getAllRatings = async () => {
   const result = await prisma.rating.findMany({
     include: {
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       product: true,
     },
   });
@@ -44,7 +60,15 @@ const getRatingById = async (id: string) => {
       id,
     },
     include: {
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       product: true,
     },
   });

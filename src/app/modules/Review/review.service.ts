@@ -21,7 +21,15 @@ const createReview = async (payload: Review, user: TUser) => {
     data: payload,
     include: {
       product: true,
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       shopResponse: true,
     },
   });
@@ -33,7 +41,15 @@ const getAllReviews = async () => {
   const result = await prisma.review.findMany({
     include: {
       product: true,
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       shopResponse: true,
     },
   });
@@ -47,7 +63,15 @@ const getReviewById = async (id: string) => {
     },
     include: {
       product: true,
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
       shopResponse: true,
     },
   });

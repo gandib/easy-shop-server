@@ -92,6 +92,7 @@ userId String
 status OrderStatus @default(PENDING)
 totalPrice Float
 paymentStatus PaymentStatus @default(UNPAID)
+transactionId String?
 orderItem OrderItem[]
 payment Payment?
 

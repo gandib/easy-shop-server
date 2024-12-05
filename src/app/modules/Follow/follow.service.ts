@@ -23,7 +23,15 @@ const getAllFollows = async () => {
   const result = await prisma.follow.findMany({
     include: {
       shop: true,
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
   return result;
@@ -53,7 +61,15 @@ const getFollowByUser = async (user: TUser) => {
     },
     include: {
       shop: true,
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
   return result;
