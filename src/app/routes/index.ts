@@ -10,6 +10,7 @@ import { ratingRoutes } from "../modules/Rating/rating.route";
 import { couponRoutes } from "../modules/Coupon/coupon.route";
 import { flashSaleRoutes } from "../modules/FlashSale/flash-sale.route";
 import { followRoutes } from "../modules/Follow/follow.route";
+import { orderRoutes } from "../modules/Order/order.route";
 
 const router = express.Router();
 
@@ -57,6 +58,10 @@ const moduleRoutes = [
   {
     path: "/follow",
     route: followRoutes,
+  },
+  {
+    path: "/order",
+    route: orderRoutes,
   },
 ];
 
