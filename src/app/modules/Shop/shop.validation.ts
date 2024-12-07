@@ -13,6 +13,7 @@ const updateShopSchema = z.object({
     .object({
       name: z.string().optional(),
       description: z.string().optional(),
+      logo: z.string().optional(),
     })
     .strict(),
 });

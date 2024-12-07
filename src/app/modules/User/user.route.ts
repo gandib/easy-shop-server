@@ -9,7 +9,11 @@ const router = express.Router();
 
 router.get("/", auth(UserRole.ADMIN), userControllers.getAllUsers);
 
-router.get("/email", auth(UserRole.ADMIN), userControllers.getUserByEmail);
+router.get(
+  "/email",
+  auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
+  userControllers.getUserByEmail
+);
 
 router.post(
   "/",

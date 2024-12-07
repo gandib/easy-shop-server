@@ -11,6 +11,12 @@ const router = express.Router();
 router.get("/", productControllers.getAllProducts);
 
 router.get(
+  "/all-products-by-shop",
+  auth(UserRole.VENDOR),
+  productControllers.getAllProductsByShopId
+);
+
+router.get(
   "/:id",
   auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
   productControllers.getProductById

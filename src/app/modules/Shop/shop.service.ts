@@ -32,7 +32,6 @@ const getAllShops = async () => {
       shopResponse: true,
       follow: true,
       coupon: true,
-      flashSale: true,
     },
   });
   return result;
@@ -50,7 +49,6 @@ const getShopById = async (id: string) => {
       shopResponse: true,
       follow: true,
       coupon: true,
-      flashSale: true,
     },
   });
   return result;

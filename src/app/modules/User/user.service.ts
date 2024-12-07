@@ -3,12 +3,15 @@ import prisma from "../../../utils/prisma";
 import bcrypt from "bcrypt";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
+import { jwtHelpers } from "../../../helper/jwtHelpers";
+import config from "../../../config";
+import { Secret } from "jsonwebtoken";
 
 const createUser = async (payload: User) => {
   const hashedPassword = await bcrypt.hash(payload.password, 12);
   payload.password = hashedPassword;
 
-  const result = await prisma.user.create({
+  const userData = await prisma.user.create({
     data: payload,
     select: {
       id: true,
@@ -21,7 +24,20 @@ const createUser = async (payload: User) => {
     },
   });
 
-  return result;
+  const accessToken = jwtHelpers.generateToken(
+    {
+      id: userData.id,
+      email: userData.email,
+      role: userData.role,
+    },
+    config.jwt.jwt_secret as Secret,
+    config.jwt.jwt_expires_in as string
+  );
+
+  return {
+    ...userData,
+    accessToken,
+  };
 };
 
 const getAllUsers = async () => {

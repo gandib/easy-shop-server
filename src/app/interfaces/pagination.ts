@@ -8,6 +8,7 @@ export type TPaginationOptions = {
 };
 
 export type TUser = {
+  id: string;
   email: string;
   role: UserRole;
 };

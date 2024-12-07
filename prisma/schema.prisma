@@ -118,18 +118,20 @@ updatedAt     DateTime @updatedAt
 }
 
 model Rating {
-id String @id @default(uuid())
-userId String @unique
-user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-productId String
-product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-rating Int
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating Int
 
-createdAt     DateTime @default(now())
-updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-@@map("ratings")
+  @@unique([userId, productId])
+  @@map("ratings")
 }
+
 
 model Review {
 id String @id @default(uuid())
@@ -143,6 +145,7 @@ shopResponse ShopResponse?
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt
 
+@@unique([userId, productId])
 @@map("reviews")
 }
 

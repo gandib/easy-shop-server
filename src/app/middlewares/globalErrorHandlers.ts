@@ -11,9 +11,7 @@ const globalErrorHandler = (
     const target = error.meta.target[0];
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
-      message: `${
-        target[0].toUpperCase() + target.substring(1)
-      } is already exists!`,
+      message: `Already exists!`,
       error,
     });
   }
@@ -21,7 +19,7 @@ const globalErrorHandler = (
     const target = error.meta.modelName;
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
-      message: `${target} is not found!`,
+      message: `Not found!`,
       error,
     });
   }

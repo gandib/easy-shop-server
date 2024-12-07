@@ -130,6 +130,120 @@ const getAllProducts = async (
   };
 };
 
+const getAllProductsByShopId = async (
+  query: TProductFilterRequest,
+  options: TPaginationOptions,
+  user: TUser
+) => {
+  const { searchTerm, category, shop, price, ...fieldsData } = query;
+  const { limit, page, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(options);
+  const andConditions: Prisma.ProductWhereInput[] = [];
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: productSearchAbleFields.map((field) => ({
+        [field]: {
+          contains: query?.searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (category) {
+    andConditions.push({
+      category: {
+        name: {
+          contains: category,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+  if (shop) {
+    andConditions.push({
+      shop: {
+        name: {
+          contains: shop,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+  if (price) {
+    andConditions.push({
+      price: {
+        lte: Number(price),
+      },
+    });
+  }
+
+  if (Object.keys(fieldsData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(fieldsData).map((key) => ({
+        [key]: {
+          equals: (fieldsData as any)[key],
+        },
+      })),
+    });
+  }
+
+  andConditions.push({
+    shopId: userData?.shop?.id,
+    isDeleted: false,
+  });
+
+  const whereConditions: Prisma.ProductWhereInput = { AND: andConditions };
+
+  const result = await prisma.product.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            createdAt: "desc",
+          },
+    include: {
+      category: true,
+      orderItem: true,
+      rating: true,
+      review: true,
+      shop: {
+        include: {
+          vendor: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.product.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 const getProductById = async (id: string) => {
   const result = await prisma.product.findUniqueOrThrow({
     where: {
@@ -243,6 +357,7 @@ export const productServices = {
   createProduct,
   getAllProducts,
   getProductById,
+  getAllProductsByShopId,
   updateProductById,
   deleteProductById,
 };
