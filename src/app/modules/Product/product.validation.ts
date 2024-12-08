@@ -21,6 +21,7 @@ const updateProductSchema = z.object({
       description: z.string().optional(),
       quantity: z.number().optional(),
       discount: z.number().optional(),
+      isDeleted: z.boolean().optional(),
     })
     .strict(),
 });

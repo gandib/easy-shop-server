@@ -82,7 +82,6 @@ const deleteProductById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await productServices.deleteProductById(
     id,
-    req.body,
     req.user as JwtPayload & TUser
   );
 

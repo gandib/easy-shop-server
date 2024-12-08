@@ -309,11 +309,7 @@ const updateProductById = async (
   return result;
 };
 
-const deleteProductById = async (
-  id: string,
-  payload: { isDeleted: boolean },
-  user: TUser
-) => {
+const deleteProductById = async (id: string, user: TUser) => {
   const productData = await prisma.product.findUniqueOrThrow({
     where: {
       id,
@@ -348,7 +344,9 @@ const deleteProductById = async (
     where: {
       id,
     },
-    data: payload,
+    data: {
+      isDeleted: true,
+    },
   });
   return result;
 };

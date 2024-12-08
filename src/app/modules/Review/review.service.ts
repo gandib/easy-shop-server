@@ -11,11 +11,41 @@ const createReview = async (payload: Review, user: TUser) => {
     },
   });
 
+  const orderData = await prisma.order.findMany({
+    where: {
+      AND: [
+        {
+          userId: user?.id,
+          paymentStatus: "PAID",
+        },
+        {
+          orderItem: {
+            some: {
+              productId: payload.productId,
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      orderItem: true,
+    },
+  });
+
+  if (orderData[0]?.orderItem[0]?.productId !== payload.productId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Review not possible before purchase!"
+    );
+  }
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found!");
   }
 
   payload.userId = userData?.id!;
+
+  // if(orderData?.find(order=> order?.orderItem))
 
   const result = await prisma.review.create({
     data: payload,

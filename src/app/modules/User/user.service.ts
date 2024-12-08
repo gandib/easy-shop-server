@@ -76,7 +76,11 @@ const getUserByEmail = async (email: string) => {
       status: true,
       createdAt: true,
       updatedAt: true,
-      shop: true,
+      shop: {
+        include: {
+          product: true,
+        },
+      },
       follow: true,
       review: true,
       rating: true,
