@@ -95,6 +95,7 @@ const getAllOrders = async (options: TPaginationOptions, user: TUser) => {
   const whereConditions: Prisma.OrderWhereInput = { AND: andConditions };
 
   const result = await prisma.order.findMany({
+    where: whereConditions,
     skip,
     take: limit,
     orderBy:
@@ -106,7 +107,11 @@ const getAllOrders = async (options: TPaginationOptions, user: TUser) => {
             createdAt: "desc",
           },
     include: {
-      orderItem: true,
+      orderItem: {
+        include: {
+          product: true,
+        },
+      },
       payment: true,
     },
   });
@@ -120,6 +125,7 @@ const getAllOrders = async (options: TPaginationOptions, user: TUser) => {
       page,
       limit,
       total,
+      totalPage: Math.ceil(total / limit),
     },
     data: result,
   };

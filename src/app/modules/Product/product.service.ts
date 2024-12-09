@@ -125,6 +125,7 @@ const getAllProducts = async (
       page,
       limit,
       total,
+      totalPage: Math.ceil(total / limit),
     },
     data: result,
   };
