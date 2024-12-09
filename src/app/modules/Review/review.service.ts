@@ -1,4 +1,4 @@
-import { Review } from "@prisma/client";
+import { Prisma, Review } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import { TUser } from "../../interfaces/pagination";
 import AppError from "../../errors/AppError";
@@ -8,6 +8,15 @@ const createReview = async (payload: Review, user: TUser) => {
   const userData = await prisma.user.findUnique({
     where: {
       email: user?.email,
+    },
+  });
+
+  const prodcutData = await prisma.product.findUnique({
+    where: {
+      id: payload.productId,
+    },
+    include: {
+      shop: true,
     },
   });
 
@@ -44,6 +53,7 @@ const createReview = async (payload: Review, user: TUser) => {
   }
 
   payload.userId = userData?.id!;
+  payload.shopId = prodcutData?.shopId!;
 
   // if(orderData?.find(order=> order?.orderItem))
 
@@ -67,10 +77,34 @@ const createReview = async (payload: Review, user: TUser) => {
   return result;
 };
 
-const getAllReviews = async () => {
-  const result = await prisma.review.findMany({
+const getAllReviews = async (user: TUser) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
     include: {
-      product: true,
+      shop: true,
+    },
+  });
+
+  const andConditions: Prisma.ReviewWhereInput[] = [];
+
+  if (user?.role === "VENDOR") {
+    andConditions.push({
+      shopId: userData?.shop?.id,
+    });
+  }
+
+  const whereConditions: Prisma.ReviewWhereInput = { AND: andConditions };
+
+  const result = await prisma.review.findMany({
+    where: whereConditions,
+    include: {
+      product: {
+        include: {
+          shop: true,
+        },
+      },
       user: {
         select: {
           id: true,
@@ -92,7 +126,11 @@ const getReviewById = async (id: string) => {
       id,
     },
     include: {
-      product: true,
+      product: {
+        include: {
+          shop: true,
+        },
+      },
       user: {
         select: {
           id: true,

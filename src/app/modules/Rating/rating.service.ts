@@ -1,4 +1,4 @@
-import { Rating } from "@prisma/client";
+import { Prisma, Rating } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import { TUser } from "../../interfaces/pagination";
 import AppError from "../../errors/AppError";
@@ -11,11 +11,21 @@ const createRating = async (payload: Rating, user: TUser) => {
     },
   });
 
+  const prodcutData = await prisma.product.findUnique({
+    where: {
+      id: payload.productId,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found!");
   }
 
   payload.userId = userData?.id!;
+  payload.shopId = prodcutData?.shopId!;
 
   const result = await prisma.rating.create({
     data: payload,
@@ -36,8 +46,28 @@ const createRating = async (payload: Rating, user: TUser) => {
   return result;
 };
 
-const getAllRatings = async () => {
+const getAllRatings = async (user: TUser) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
+  const andConditions: Prisma.RatingWhereInput[] = [];
+
+  if (user?.role === "VENDOR") {
+    andConditions.push({
+      shopId: userData?.shop?.id,
+    });
+  }
+
+  const whereConditions: Prisma.RatingWhereInput = { AND: andConditions };
+
   const result = await prisma.rating.findMany({
+    where: whereConditions,
     include: {
       user: {
         select: {

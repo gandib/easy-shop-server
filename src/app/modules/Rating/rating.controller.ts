@@ -20,7 +20,9 @@ const createRating = catchAsync(async (req, res) => {
 });
 
 const getAllRatings = catchAsync(async (req, res) => {
-  const result = await ratingServices.getAllRatings();
+  const result = await ratingServices.getAllRatings(
+    req.user as JwtPayload & TUser
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

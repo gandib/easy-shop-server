@@ -221,7 +221,24 @@ const getAllProductsByShopId = async (
       category: true,
       orderItem: true,
       rating: true,
-      review: true,
+      review: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+          shopResponse: {
+            include: {
+              shop: true,
+            },
+          },
+        },
+      },
       shop: {
         include: {
           vendor: true,
@@ -254,7 +271,24 @@ const getProductById = async (id: string) => {
       category: true,
       orderItem: true,
       rating: true,
-      review: true,
+      review: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+          shopResponse: {
+            include: {
+              shop: true,
+            },
+          },
+        },
+      },
       shop: {
         include: {
           vendor: true,

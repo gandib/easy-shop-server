@@ -40,7 +40,7 @@ const moduleRoutes = [
     route: reviewRoutes,
   },
   {
-    path: "/shopResponse",
+    path: "/shop-response",
     route: shopResponseRoutes,
   },
   {
@@ -52,7 +52,7 @@ const moduleRoutes = [
     route: couponRoutes,
   },
   {
-    path: "/flashSale",
+    path: "/flash-sale",
     route: flashSaleRoutes,
   },
   {

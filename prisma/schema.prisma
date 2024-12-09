@@ -124,6 +124,7 @@ model Rating {
   productId String
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   rating Int
+  shopId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,6 +137,7 @@ model Rating {
 model Review {
 id String @id @default(uuid())
 comment String
+shopId String
 productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 userId String

@@ -7,7 +7,11 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-router.get("/", ratingControllers.getAllRatings);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
+  ratingControllers.getAllRatings
+);
 
 router.get(
   "/:id",

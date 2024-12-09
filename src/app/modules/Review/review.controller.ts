@@ -20,7 +20,9 @@ const createReview = catchAsync(async (req, res) => {
 });
 
 const getAllReviews = catchAsync(async (req, res) => {
-  const result = await reviewServices.getAllReviews();
+  const result = await reviewServices.getAllReviews(
+    req.user as JwtPayload & TUser
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
