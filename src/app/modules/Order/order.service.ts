@@ -1,6 +1,7 @@
-import { Order, OrderItem } from "@prisma/client";
+import { Order, OrderItem, Prisma } from "@prisma/client";
 import prisma from "../../../utils/prisma";
-import { TUser } from "../../interfaces/pagination";
+import { TPaginationOptions, TUser } from "../../interfaces/pagination";
+import { paginationHelpers } from "../../../helper/paginationHelpers";
 
 const createOrder = async (
   payload: Order & { orderItems: OrderItem[] },
@@ -12,9 +13,19 @@ const createOrder = async (
     },
   });
 
+  const productData = await prisma.product.findUniqueOrThrow({
+    where: {
+      id: payload.orderItems[0].productId,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
   const result = await prisma.$transaction(async (transactionClient) => {
     const createOrder = await transactionClient.order.create({
       data: {
+        shopId: productData?.shopId,
         userId: userData?.id!,
         totalPrice: payload.totalPrice,
       },
@@ -55,14 +66,63 @@ const createOrder = async (
   return result;
 };
 
-const getAllOrders = async () => {
+const getAllOrders = async (options: TPaginationOptions, user: TUser) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
+  const { limit, page, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(options);
+  const andConditions: Prisma.OrderWhereInput[] = [];
+
+  if (user.role === "VENDOR") {
+    andConditions.push({
+      shopId: userData?.shop?.id,
+    });
+  }
+
+  if (user.role === "USER") {
+    andConditions.push({
+      userId: userData?.id,
+    });
+  }
+
+  const whereConditions: Prisma.OrderWhereInput = { AND: andConditions };
+
   const result = await prisma.order.findMany({
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            createdAt: "desc",
+          },
     include: {
       orderItem: true,
       payment: true,
     },
   });
-  return result;
+
+  const total = await prisma.order.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
 };
 
 const getOrderById = async (id: string) => {

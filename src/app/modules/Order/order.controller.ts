@@ -4,6 +4,7 @@ import sendResponse from "../../../utils/sendResponse";
 import { orderServices } from "./order.service";
 import { JwtPayload } from "jsonwebtoken";
 import { TUser } from "../../interfaces/pagination";
+import pick from "../../../utils/pick";
 
 const createOrder = catchAsync(async (req, res) => {
   const result = await orderServices.createOrder(
@@ -20,7 +21,11 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getAllOrders = catchAsync(async (req, res) => {
-  const result = await orderServices.getAllOrders();
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await orderServices.getAllOrders(
+    options,
+    req.user as JwtPayload & TUser
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
