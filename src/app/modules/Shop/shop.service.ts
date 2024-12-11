@@ -24,7 +24,7 @@ const createShop = async (file: any, payload: Shop) => {
 const getAllShops = async () => {
   const result = await prisma.shop.findMany({
     where: {
-      isBlackListed: false,
+      // isBlackListed: false,
     },
     include: {
       vendor: true,

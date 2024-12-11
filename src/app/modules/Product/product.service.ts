@@ -257,6 +257,7 @@ const getAllProductsByShopId = async (
       page,
       limit,
       total,
+      totalPage: Math.ceil(total / limit),
     },
     data: result,
   };

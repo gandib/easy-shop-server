@@ -43,7 +43,7 @@ const createUser = async (payload: User) => {
 const getAllUsers = async () => {
   const result = await prisma.user.findMany({
     where: {
-      status: "ACTIVE",
+      // status: "ACTIVE",
     },
     select: {
       id: true,
@@ -59,7 +59,17 @@ const getAllUsers = async () => {
       rating: true,
     },
   });
-  return result;
+
+  let users = [];
+
+  for (let index = 0; index < result.length; index++) {
+    const user = result[index];
+    if (user?.role !== "ADMIN") {
+      users.push(user);
+    }
+  }
+
+  return users;
 };
 
 const getUserByEmail = async (email: string) => {
