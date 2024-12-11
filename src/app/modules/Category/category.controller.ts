@@ -44,7 +44,9 @@ const updateCategoryById = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Category is updated successfully!",
+    message: `Category is ${
+      req.body.isDeleted === true ? "deleted" : "updated"
+    }  successfully!`,
     data: result,
   });
 });

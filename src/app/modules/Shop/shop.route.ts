@@ -12,7 +12,7 @@ router.get("/", shopControllers.getAllShops);
 
 router.get(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
+  // auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
   shopControllers.getShopById
 );
 
