@@ -143,7 +143,7 @@ productId String
 product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 userId String
 user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-shopResponse ShopResponse?
+shopResponse ShopResponse[]
 
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt
@@ -154,11 +154,13 @@ updatedAt     DateTime @updatedAt
 
 model ShopResponse {
 id String @id @default(uuid())
-reviewId String @unique
+reviewId String
 review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-shopId String @unique
+shopId String
 shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
 response String
+
+@@unique([reviewId, shopId])
 
 createdAt     DateTime @default(now())
 updatedAt     DateTime @updatedAt

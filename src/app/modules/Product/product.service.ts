@@ -60,10 +60,7 @@ const getAllProducts = async (
   if (shop) {
     andConditions.push({
       shop: {
-        name: {
-          contains: shop,
-          mode: "insensitive",
-        },
+        id: shop,
       },
     });
   }
@@ -199,6 +196,12 @@ const getAllProductsByShopId = async (
     });
   }
 
+  let result;
+
+  if (userData?.shop?.id === undefined) {
+    return (result = []);
+  }
+
   andConditions.push({
     shopId: userData?.shop?.id,
     isDeleted: false,
@@ -206,7 +209,7 @@ const getAllProductsByShopId = async (
 
   const whereConditions: Prisma.ProductWhereInput = { AND: andConditions };
 
-  const result = await prisma.product.findMany({
+  result = await prisma.product.findMany({
     where: whereConditions,
     skip,
     take: limit,

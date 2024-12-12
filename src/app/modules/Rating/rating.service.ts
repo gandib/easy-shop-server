@@ -9,6 +9,9 @@ const createRating = async (payload: Rating, user: TUser) => {
     where: {
       email: user?.email,
     },
+    include: {
+      rating: true,
+    },
   });
 
   const prodcutData = await prisma.product.findUnique({
@@ -20,28 +23,89 @@ const createRating = async (payload: Rating, user: TUser) => {
     },
   });
 
+  const orderData = await prisma.order.findMany({
+    where: {
+      AND: [
+        {
+          userId: user?.id,
+          paymentStatus: "PAID",
+        },
+        {
+          orderItem: {
+            some: {
+              productId: payload.productId,
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      orderItem: true,
+    },
+  });
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  if (orderData[0]?.orderItem[0]?.productId !== payload.productId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Rating not possible before purchase!"
+    );
   }
 
   payload.userId = userData?.id!;
   payload.shopId = prodcutData?.shopId!;
 
-  const result = await prisma.rating.create({
-    data: payload,
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          status: true,
-        },
+  let result;
+
+  if (userData?.rating?.find((rate) => rate?.productId === payload.productId)) {
+    const rating = await prisma.rating.findUnique({
+      where: {
+        id: userData?.rating?.filter(
+          (rate) => rate?.productId === payload.productId
+        )[0].id,
       },
-      product: true,
-    },
-  });
+    });
+
+    result = await prisma.rating.update({
+      where: {
+        id: rating?.id,
+      },
+      data: {
+        rating: payload.rating,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+        product: true,
+      },
+    });
+  } else {
+    result = await prisma.rating.create({
+      data: payload,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+        product: true,
+      },
+    });
+  }
 
   return result;
 };
