@@ -110,6 +110,11 @@ const getAllProducts = async (
           vendor: true,
         },
       },
+      flashSale: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
@@ -248,6 +253,11 @@ const getAllProductsByShopId = async (
           vendor: true,
         },
       },
+      flashSale: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
@@ -297,6 +307,11 @@ const getProductById = async (id: string) => {
       shop: {
         include: {
           vendor: true,
+        },
+      },
+      flashSale: {
+        include: {
+          product: true,
         },
       },
     },

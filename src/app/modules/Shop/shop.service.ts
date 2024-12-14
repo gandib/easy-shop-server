@@ -38,9 +38,18 @@ const getAllShops = async () => {
 };
 
 const getShopById = async (id: string) => {
-  const result = await prisma.shop.findUniqueOrThrow({
+  const user = await prisma.user.findUnique({
     where: {
       id,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
+  const result = await prisma.shop.findUniqueOrThrow({
+    where: {
+      id: user?.shop?.id ? user?.shop?.id : id,
       isBlackListed: false,
     },
     include: {
