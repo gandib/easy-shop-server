@@ -7,7 +7,11 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-router.get("/", flashSaleControllers.getAllFlashSales);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.VENDOR),
+  flashSaleControllers.getAllFlashSales
+);
 
 router.get("/:id", flashSaleControllers.getFlashSaleById);
 

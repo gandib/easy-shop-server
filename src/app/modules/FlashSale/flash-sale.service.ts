@@ -37,12 +37,31 @@ const createFlashSale = async (payload: FlashSale, user: TUser) => {
   return result;
 };
 
-const getAllFlashSales = async () => {
+const getAllFlashSales = async (user: TUser) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
+    include: {
+      shop: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+
+  const productIds = userData?.shop?.product?.map((prod) => prod.id);
+
   const result = await prisma.flashSale.findMany({
+    where: {
+      productId: { in: productIds },
+    },
     include: {
       product: true,
     },
   });
+
   return result;
 };
 

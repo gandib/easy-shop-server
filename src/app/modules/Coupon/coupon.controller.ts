@@ -20,7 +20,9 @@ const createCoupon = catchAsync(async (req, res) => {
 });
 
 const getAllCoupons = catchAsync(async (req, res) => {
-  const result = await couponServices.getAllCoupons();
+  const result = await couponServices.getAllCoupons(
+    req.user as JwtPayload & TUser
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

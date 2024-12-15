@@ -67,7 +67,8 @@ const getAllProducts = async (
   if (price) {
     andConditions.push({
       price: {
-        lte: Number(price),
+        gte: Number(price.split("-")[0]),
+        lte: Number(price.split("-")[1]),
       },
     });
   }

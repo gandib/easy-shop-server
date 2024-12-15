@@ -1,9 +1,9 @@
+import { TUser } from "./../../interfaces/pagination";
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { flashSaleServices } from "./flash-sale.service";
 import { JwtPayload } from "jsonwebtoken";
-import { TUser } from "../../interfaces/pagination";
 
 const createFlashSale = catchAsync(async (req, res) => {
   const result = await flashSaleServices.createFlashSale(
@@ -20,7 +20,9 @@ const createFlashSale = catchAsync(async (req, res) => {
 });
 
 const getAllFlashSales = catchAsync(async (req, res) => {
-  const result = await flashSaleServices.getAllFlashSales();
+  const result = await flashSaleServices.getAllFlashSales(
+    req.user as JwtPayload & TUser
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -20,7 +20,7 @@ const initiatePayment = async (paymentData: any) => {
       signature_key: config.signature_key,
       tran_id: `${paymentData.orderId}-${transactionId}`,
       success_url: `http://localhost:5000/api/v1/payment/confirmation?transactionId=${paymentData.orderId}-${transactionId}&status=success`,
-      fail_url: `https://localhost:5000/api/v1/payment/confirmation?status=failed`,
+      fail_url: `http://localhost:5000/api/v1/payment/confirmation?transactionId=${paymentData.orderId}-${transactionId}&status=failed`,
       cancel_url: "http://localhost:3000/",
       amount: paymentData.amount,
       currency: "BDT",
@@ -46,7 +46,6 @@ const initiatePayment = async (paymentData: any) => {
       },
     });
 
-    //console.log(response);
     return response.data;
   } catch (err) {
     throw new Error("Payment initiation failed!");
@@ -57,8 +56,8 @@ const paymentConfirmation = async (transactionId: string) => {
   const verifyResponse = await verifyPayment(transactionId);
 
   let message = "";
-  const trnxId = (transactionId as string)?.split("-")[0];
-
+  const trnxId = (transactionId as string)?.split("-easy-shop")[0];
+  console.log(trnxId, transactionId);
   const orderData = await prisma.order.findUnique({
     where: {
       id: trnxId,

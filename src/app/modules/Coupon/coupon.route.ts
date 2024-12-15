@@ -7,7 +7,11 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-router.get("/", couponControllers.getAllCoupons);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.VENDOR),
+  couponControllers.getAllCoupons
+);
 
 router.get("/:id", couponControllers.getCouponById);
 

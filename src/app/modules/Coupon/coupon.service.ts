@@ -30,12 +30,25 @@ const createCoupon = async (payload: Coupon, user: TUser) => {
   return result;
 };
 
-const getAllCoupons = async () => {
-  const result = await prisma.coupon.findMany({
+const getAllCoupons = async (user: TUser) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
     include: {
       shop: true,
     },
   });
+
+  const result = await prisma.coupon.findMany({
+    where: {
+      shopId: userData?.shop?.id,
+    },
+    include: {
+      shop: true,
+    },
+  });
+
   return result;
 };
 

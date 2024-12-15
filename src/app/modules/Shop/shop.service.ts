@@ -54,7 +54,11 @@ const getShopById = async (id: string) => {
     },
     include: {
       vendor: true,
-      product: true,
+      product: {
+        include: {
+          category: true,
+        },
+      },
       shopResponse: true,
       follow: true,
       coupon: true,
