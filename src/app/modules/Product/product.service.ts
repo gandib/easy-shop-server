@@ -134,6 +134,124 @@ const getAllProducts = async (
   };
 };
 
+const getAllProductsByFollowedUser = async (
+  query: TProductFilterRequest,
+  options: TPaginationOptions,
+  user: TUser
+) => {
+  const { searchTerm, category, shop, price, ...fieldsData } = query;
+  const { limit, page, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(options);
+  const andConditions: Prisma.ProductWhereInput[] = [];
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user?.id,
+    },
+    include: {
+      follow: true,
+    },
+  });
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: productSearchAbleFields.map((field) => ({
+        [field]: {
+          contains: query?.searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (category) {
+    andConditions.push({
+      category: {
+        name: {
+          contains: category,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+  if (shop) {
+    andConditions.push({
+      shop: {
+        id: shop,
+      },
+    });
+  }
+  if (price) {
+    andConditions.push({
+      price: {
+        gte: Number(price.split("-")[0]),
+        lte: Number(price.split("-")[1]),
+      },
+    });
+  }
+
+  if (Object.keys(fieldsData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(fieldsData).map((key) => ({
+        [key]: {
+          equals: (fieldsData as any)[key],
+        },
+      })),
+    });
+  }
+
+  andConditions.push({
+    shopId: userData?.follow?.find((follow) => follow?.shopId)?.shopId,
+    isDeleted: false,
+  });
+
+  const whereConditions: Prisma.ProductWhereInput = { AND: andConditions };
+
+  const result = await prisma.product.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            createdAt: "desc",
+          },
+    include: {
+      category: true,
+      orderItem: true,
+      rating: true,
+      review: true,
+      shop: {
+        include: {
+          vendor: true,
+        },
+      },
+      flashSale: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.product.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage: Math.ceil(total / limit),
+    },
+    data: result,
+  };
+};
+
 const getAllProductsByShopId = async (
   query: TProductFilterRequest,
   options: TPaginationOptions,
@@ -413,4 +531,5 @@ export const productServices = {
   getAllProductsByShopId,
   updateProductById,
   deleteProductById,
+  getAllProductsByFollowedUser,
 };

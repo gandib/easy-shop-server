@@ -32,6 +32,24 @@ const getAllProducts = catchAsync(async (req, res) => {
   });
 });
 
+const getAllProductsByFollowedUser = catchAsync(async (req, res) => {
+  const filters = pick(req.query, productFilterAbleFields);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+
+  const result = await productServices.getAllProductsByFollowedUser(
+    filters,
+    options,
+    req.user as JwtPayload & TUser
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Products are retrieved successfully!",
+    data: result,
+  });
+});
+
 const getAllProductsByShopId = catchAsync(async (req, res) => {
   const filters = pick(req.query, productFilterAbleFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
@@ -100,4 +118,5 @@ export const productControllers = {
   getProductById,
   updateProductById,
   deleteProductById,
+  getAllProductsByFollowedUser,
 };

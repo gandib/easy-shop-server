@@ -11,6 +11,12 @@ const router = express.Router();
 router.get("/", productControllers.getAllProducts);
 
 router.get(
+  "/by-follower",
+  auth(UserRole.USER),
+  productControllers.getAllProductsByFollowedUser
+);
+
+router.get(
   "/all-products-by-shop",
   auth(UserRole.VENDOR),
   productControllers.getAllProductsByShopId
