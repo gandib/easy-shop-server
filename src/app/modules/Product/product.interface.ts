@@ -5,4 +5,5 @@ export type TProductFilterRequest = {
   searchTerm?: string | undefined;
   description?: string | undefined;
   shop?: string | undefined;
+  flash?: string | undefined;
 };

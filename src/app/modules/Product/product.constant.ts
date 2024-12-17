@@ -5,6 +5,7 @@ export const productFilterAbleFields = [
   "searchTerm",
   "description",
   "shop",
+  "flash",
 ];
 
 export const productSearchAbleFields = ["name", "description"];

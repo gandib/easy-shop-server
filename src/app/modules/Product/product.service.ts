@@ -31,10 +31,13 @@ const getAllProducts = async (
   query: TProductFilterRequest,
   options: TPaginationOptions
 ) => {
-  const { searchTerm, category, shop, price, ...fieldsData } = query;
+  const { searchTerm, category, shop, price, flash, ...fieldsData } = query;
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
   const andConditions: Prisma.ProductWhereInput[] = [];
+  console.log(flash);
+
+  const flashSaleData = await prisma.flashSale.findMany();
 
   if (searchTerm) {
     andConditions.push({
@@ -57,6 +60,7 @@ const getAllProducts = async (
       },
     });
   }
+
   if (shop) {
     andConditions.push({
       shop: {
@@ -64,6 +68,7 @@ const getAllProducts = async (
       },
     });
   }
+
   if (price) {
     andConditions.push({
       price: {
@@ -71,6 +76,24 @@ const getAllProducts = async (
         lte: Number(price.split("-")[1]),
       },
     });
+  }
+
+  if (flash) {
+    const productIds = flashSaleData
+      ?.filter((flashSale) => flashSale.productId)
+      .map((flashSale) => flashSale.productId);
+
+    if (productIds && productIds.length > 0) {
+      andConditions.push({
+        flashSale: {
+          some: {
+            productId: {
+              in: productIds,
+            },
+          },
+        },
+      });
+    }
   }
 
   if (Object.keys(fieldsData).length > 0) {
