@@ -4,7 +4,7 @@ import validateRequest from "../../middlewares/validateRequest";
 import { shopValidations } from "./shop.validation";
 import auth from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
-import { upload } from "../../../utils/upload";
+import { multerUpload } from "../../../config/multer.config";
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get(
 router.post(
   "/",
   auth(UserRole.VENDOR),
-  upload.single("file"),
+  multerUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();

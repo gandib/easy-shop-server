@@ -7,6 +7,9 @@ export default {
   node_dev: process.env.NODE_ENV,
   database_url: process.env.DATABASE_URL,
   port: process.env.PORT,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
   jwt: {
     jwt_secret: process.env.JWT_SECRET,
     jwt_expires_in: process.env.JWT_EXPIRES_IN,
