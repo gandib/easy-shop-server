@@ -57,7 +57,6 @@ const paymentConfirmation = async (transactionId: string) => {
 
   let message = "";
   const trnxId = (transactionId as string)?.split("-easy-shop")[0];
-  console.log(trnxId, transactionId);
   const orderData = await prisma.order.findUnique({
     where: {
       id: trnxId,

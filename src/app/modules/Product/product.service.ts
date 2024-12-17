@@ -35,7 +35,6 @@ const getAllProducts = async (
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
   const andConditions: Prisma.ProductWhereInput[] = [];
-  console.log(flash);
 
   const flashSaleData = await prisma.flashSale.findMany();
 
