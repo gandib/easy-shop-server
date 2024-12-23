@@ -1,4 +1,4 @@
-# Easy Shop
+# Easy Shop MySQL Server
 
 ## Introduction
 
