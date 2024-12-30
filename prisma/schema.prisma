@@ -219,6 +219,12 @@ shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
 @@map("follows")
 }
 
+model Newsletter {
+email String @unique
+
+@@map("newsletters")
+}
+
 enum UserRole {
   ADMIN
   VENDOR
