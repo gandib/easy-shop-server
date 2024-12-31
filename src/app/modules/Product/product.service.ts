@@ -2,22 +2,40 @@ import { Prisma, Product, UserRole } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 import { sendImageToCloudinary } from "../../../utils/sendImageToCloudinary";
 import { TPaginationOptions, TUser } from "../../interfaces/pagination";
-import { TProductFilterRequest } from "./product.interface";
+import { TImageFiles, TProductFilterRequest } from "./product.interface";
 import { paginationHelpers } from "../../../helper/paginationHelpers";
 import { productSearchAbleFields } from "./product.constant";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
+import config from "../../../config";
 
-const createProduct = async (file: any, payload: Product) => {
-  if (file) {
-    const imageName = `${payload?.name}-${Date.now()}-${Math.round(
-      Math.random() * 1e9
-    )}`;
-    const path = file?.path;
+const createProduct = async (files: TImageFiles, payload: Product) => {
+  const { file } = files;
+  try {
+    if (file) {
+      const paths: string[] = [];
+      const imageUrl: string[] = [];
+      file.map((image: any) => {
+        paths.push(image?.path);
+      });
 
-    // send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path);
-    payload.img = secure_url as string;
+      // send image to cloudinary
+      for (let index = 0; index < paths.length; index++) {
+        const imageName = `${payload?.name}-${Date.now()}-${Math.round(
+          Math.random() * 1e9
+        )}`;
+        const path = paths[index];
+        const { secure_url } = await sendImageToCloudinary(imageName, path);
+        imageUrl.push(secure_url as string);
+      }
+      payload.img = imageUrl as string[];
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (payload.img.length === 0) {
+    payload.img = [config.project_photo!];
   }
 
   const result = await prisma.product.create({

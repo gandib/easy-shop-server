@@ -4,7 +4,7 @@ import sendResponse from "../../../utils/sendResponse";
 import { categoryServices } from "./category.service";
 
 const createCategory = catchAsync(async (req, res) => {
-  const result = await categoryServices.createCategory(req.body);
+  const result = await categoryServices.createCategory(req.file, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

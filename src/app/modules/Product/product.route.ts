@@ -31,7 +31,7 @@ router.get(
 router.post(
   "/",
   auth(UserRole.ADMIN, UserRole.VENDOR),
-  multerUpload.single("file"),
+  multerUpload.fields([{ name: "file" }]),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();

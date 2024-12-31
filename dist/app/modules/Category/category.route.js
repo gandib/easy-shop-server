@@ -10,9 +10,13 @@ const validateRequest_1 = __importDefault(require("../../middlewares/validateReq
 const category_validation_1 = require("./category.validation");
 const auth_1 = __importDefault(require("../../middlewares/auth"));
 const client_1 = require("@prisma/client");
+const multer_config_1 = require("../../../config/multer.config");
 const router = express_1.default.Router();
 router.get("/", category_controller_1.categoryControllers.getAllCategories);
 router.get("/:id", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR, client_1.UserRole.USER), category_controller_1.categoryControllers.getCategoryById);
-router.post("/", (0, auth_1.default)(client_1.UserRole.ADMIN), (0, validateRequest_1.default)(category_validation_1.categoryValidations.createCategorySchema), category_controller_1.categoryControllers.createCategory);
+router.post("/", (0, auth_1.default)(client_1.UserRole.ADMIN), multer_config_1.multerUpload.single("file"), (req, res, next) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+}, (0, validateRequest_1.default)(category_validation_1.categoryValidations.createCategorySchema), category_controller_1.categoryControllers.createCategory);
 router.patch("/:id", (0, auth_1.default)(client_1.UserRole.ADMIN), (0, validateRequest_1.default)(category_validation_1.categoryValidations.updateCategorySchema), category_controller_1.categoryControllers.updateCategoryById);
 exports.categoryRoutes = router;

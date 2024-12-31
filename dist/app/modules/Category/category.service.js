@@ -14,7 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.categoryServices = void 0;
 const prisma_1 = __importDefault(require("../../../utils/prisma"));
-const createCategory = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const sendImageToCloudinary_1 = require("../../../utils/sendImageToCloudinary");
+const createCategory = (file, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    if (file) {
+        const imageName = `${payload === null || payload === void 0 ? void 0 : payload.name}-${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        const path = file === null || file === void 0 ? void 0 : file.path;
+        // send image to cloudinary
+        const { secure_url } = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, path);
+        payload.img = secure_url;
+    }
     const result = yield prisma_1.default.category.create({
         data: payload,
     });

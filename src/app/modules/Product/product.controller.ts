@@ -6,9 +6,13 @@ import pick from "../../../utils/pick";
 import { productFilterAbleFields } from "./product.constant";
 import { JwtPayload } from "jsonwebtoken";
 import { TUser } from "../../interfaces/pagination";
+import { TImageFiles } from "./product.interface";
 
 const createProduct = catchAsync(async (req, res) => {
-  const result = await productServices.createProduct(req.file, req.body);
+  const result = await productServices.createProduct(
+    req.files as TImageFiles,
+    req.body
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

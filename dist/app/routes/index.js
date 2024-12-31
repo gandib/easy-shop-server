@@ -17,6 +17,7 @@ const flash_sale_route_1 = require("../modules/FlashSale/flash-sale.route");
 const follow_route_1 = require("../modules/Follow/follow.route");
 const order_route_1 = require("../modules/Order/order.route");
 const payment_route_1 = require("../modules/Payment/payment.route");
+const newsletter_route_1 = require("../modules/Newsletter/newsletter.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -70,6 +71,10 @@ const moduleRoutes = [
     {
         path: "/payment",
         route: payment_route_1.paymentRoutes,
+    },
+    {
+        path: "/newsletter",
+        route: newsletter_route_1.newsletterRoutes,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

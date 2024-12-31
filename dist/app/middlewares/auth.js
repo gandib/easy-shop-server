@@ -18,8 +18,9 @@ const AppError_1 = __importDefault(require("../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const auth = (...roles) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         try {
-            const token = req.headers.authorization;
+            const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
             if (!token) {
                 throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized!");
             }
