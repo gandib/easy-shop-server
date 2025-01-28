@@ -18,7 +18,7 @@ router.get("/all-products-by-shop", (0, auth_1.default)(client_1.UserRole.VENDOR
 router.get("/:id", 
 // auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.USER),
 product_controller_1.productControllers.getProductById);
-router.post("/", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR), multer_config_1.multerUpload.single("file"), (req, res, next) => {
+router.post("/", (0, auth_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.VENDOR), multer_config_1.multerUpload.fields([{ name: "file" }]), (req, res, next) => {
     req.body = JSON.parse(req.body.data);
     next();
 }, (0, validateRequest_1.default)(product_validation_1.productValidations.createProductSchema), product_controller_1.productControllers.createProduct);

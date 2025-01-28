@@ -35,4 +35,5 @@ exports.default = {
     signature_key: process.env.SIGNATURE_KEY,
     payment_url: process.env.PAYMENT_URL,
     verify_payment_url: process.env.PAYMENT_VERIFY_URL,
+    project_photo: process.env.PROJECT_PHOTO,
 };

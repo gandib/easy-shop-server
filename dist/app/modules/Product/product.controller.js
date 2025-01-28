@@ -20,7 +20,7 @@ const product_service_1 = require("./product.service");
 const pick_1 = __importDefault(require("../../../utils/pick"));
 const product_constant_1 = require("./product.constant");
 const createProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield product_service_1.productServices.createProduct(req.file, req.body);
+    const result = yield product_service_1.productServices.createProduct(req.files, req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

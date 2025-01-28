@@ -22,6 +22,7 @@ const updateProductSchema = zod_1.z.object({
         description: zod_1.z.string().optional(),
         quantity: zod_1.z.number().optional(),
         discount: zod_1.z.number().optional(),
+        img: zod_1.z.array(zod_1.z.string().url()).optional(),
         isDeleted: zod_1.z.boolean().optional(),
     })
         .strict(),

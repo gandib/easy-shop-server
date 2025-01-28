@@ -30,13 +30,31 @@ const paginationHelpers_1 = require("../../../helper/paginationHelpers");
 const product_constant_1 = require("./product.constant");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
-const createProduct = (file, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    if (file) {
-        const imageName = `${payload === null || payload === void 0 ? void 0 : payload.name}-${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        const path = file === null || file === void 0 ? void 0 : file.path;
-        // send image to cloudinary
-        const { secure_url } = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, path);
-        payload.img = secure_url;
+const config_1 = __importDefault(require("../../../config"));
+const createProduct = (files, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { file } = files;
+    try {
+        if (file) {
+            const paths = [];
+            const imageUrl = [];
+            file.map((image) => {
+                paths.push(image === null || image === void 0 ? void 0 : image.path);
+            });
+            // send image to cloudinary
+            for (let index = 0; index < paths.length; index++) {
+                const imageName = `${payload === null || payload === void 0 ? void 0 : payload.name}-${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+                const path = paths[index];
+                const { secure_url } = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, path);
+                imageUrl.push(secure_url);
+            }
+            payload.img = imageUrl;
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+    if (payload.img.length === 0) {
+        payload.img = [config_1.default.project_photo];
     }
     const result = yield prisma_1.default.product.create({
         data: payload,
